@@ -8,11 +8,11 @@ RUN apk add --no-cache --virtual .build-dependencies build-base wget libressl-de
  && downloadDir="$(mktemp -d)" \
  && wget -O "$downloadDir/mariadb.tar.gz" https://downloads.mariadb.org/interstitial/mariadb-$MDB_VERSION/source/mariadb-$MDB_VERSION.tar.gz \
  && buildDir="$(mktemp -d)" \
- && mkdir "$buildDir/src" \
- && tar xvfz "$downloadDir/mariadb.tar.gz" -C "$buildDir/src" --strip-components=1 \
+ && tar xvfz "$downloadDir/mariadb.tar.gz" -C "$buildDir" --strip-components=1 \
  && rm -rf "$downloadDir" \
- && mv -f /tmp/pcre.cmake "$buildDir/src/mariadb-10.3.7/cmake/pcre.cmake" \
- && cd "$buildDir/src/mariadb-10.3.7" \
+ && mv -f /tmp/pcre.cmake "$buildDir/cmake/pcre.cmake" \
+ && mkdir -p "$buildDir/build" \
+ && cd "$buildDir/build" \
  && cmake .. \
     -DBUILD_CONFIG=mysql_release \
     -DCMAKE_INSTALL_PREFIX=/usr \
@@ -24,13 +24,13 @@ RUN apk add --no-cache --virtual .build-dependencies build-base wget libressl-de
     -DENABLED_LOCAL_INFILE=ON \
     -DINSTALL_INFODIR=share/info \
     -DINSTALL_MANDIR=share/man \
-    -DINSTALL_PLUGINDIR=lib/$pkgname/plugin \
+    -DINSTALL_PLUGINDIR=lib/mariadb/plugin \
     -DINSTALL_SCRIPTDIR=bin \
     -DINSTALL_INCLUDEDIR=include/mysql \
-    -DINSTALL_DOCREADMEDIR=share/doc/$pkgname \
-    -DINSTALL_SUPPORTFILESDIR=share/$pkgname \
-    -DINSTALL_MYSQLSHAREDIR=share/$pkgname \
-    -DINSTALL_DOCDIR=share/doc/$pkgname \
+    -DINSTALL_DOCREADMEDIR=share/doc/mariadb \
+    -DINSTALL_SUPPORTFILESDIR=share/mariadb \
+    -DINSTALL_MYSQLSHAREDIR=share/mariadb \
+    -DINSTALL_DOCDIR=share/doc/mariadb \
     -DTMPDIR=/var/tmp \
     -DCONNECT_WITH_MYSQL=ON \
     -DCONNECT_WITH_LIBXML2=system \
@@ -74,4 +74,3 @@ RUN apk add --no-cache --virtual .build-dependencies build-base wget libressl-de
     -DWITH_ZLIB=system \
     -DSKIP_TESTS=ON \
     -WITHOUT_SERVER=ON
- 
