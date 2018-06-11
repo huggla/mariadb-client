@@ -11,8 +11,8 @@ RUN apk add --no-cache --virtual .build-dependencies build-base wget libressl-de
  && mkdir "$buildDir/src" \
  && tar xvfz "$downloadDir/mariadb.tar.gz" -C "$buildDir/src" --strip-components=1 \
  && rm -rf "$downloadDir" \
- && mv -f /tmp/pcre.cmake "$buildDir/src/cmake/pcre.cmake" \
- && cd "$buildDir/src" \
+ && mv -f /tmp/pcre.cmake "$buildDir/src/mariadb-10.3.7/cmake/pcre.cmake" \
+ && cd "$buildDir/src/mariadb-10.3.7" \
  && cmake .. \
     -DBUILD_CONFIG=mysql_release \
     -DCMAKE_INSTALL_PREFIX=/usr \
