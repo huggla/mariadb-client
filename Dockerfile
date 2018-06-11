@@ -8,11 +8,12 @@ RUN apk add --no-cache --virtual .build-dependencies build-base wget libressl-de
  && downloadDir="$(mktemp -d)" \
  && wget -O "$downloadDir/mariadb.tar.gz" https://downloads.mariadb.org/interstitial/mariadb-$MDB_VERSION/source/mariadb-$MDB_VERSION.tar.gz \
  && buildDir="$(mktemp -d)" \
- && tar xvfz "$downloadDir/mariadb.tar.gz" -C "$buildDir" --strip-components=1 \
+ && mkdir "$buildDir/src"
+ && tar xvfz "$downloadDir/mariadb.tar.gz" -C "$buildDir/src" --strip-components=1 \
  && rm -rf "$downloadDir" \
- && mv -f /cmake/pcre.cmake "$buildDir/cmake/pcre.cmake" \
- && cd "$buildDir" \
- && cmake . \
+ && mv -f /cmake/pcre.cmake "$buildDir/src/cmake/pcre.cmake" \
+ && cd "$buildDir/src" \
+ && cmake .. \
     -DBUILD_CONFIG=mysql_release \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DSYSCONFDIR=/etc/mysql \
