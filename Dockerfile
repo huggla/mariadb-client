@@ -5,6 +5,8 @@ ENV MDB_VERSION="10.3.7"
 COPY ./cmake/pcre.cmake /tmp/pcre.cmake
 
 RUN apk add --no-cache --virtual .build-dependencies build-base wget libressl-dev zlib-dev mariadb-connector-c-dev bison cmake curl-dev libaio-dev libarchive-dev libevent-dev	libxml2-dev ncurses-dev pcre-dev readline-dev xz-dev linux-headers \
+ && addgroup -S mysql 2>/dev/null \
+ && adduser -S -D -h /var/lib/mysql -s /sbin/nologin -G mysql -g mysql mysql 2>/dev/null \
  && downloadDir="$(mktemp -d)" \
  && wget -O "$downloadDir/mariadb.tar.gz" https://downloads.mariadb.org/interstitial/mariadb-$MDB_VERSION/source/mariadb-$MDB_VERSION.tar.gz \
  && buildDir="$(mktemp -d)" \
