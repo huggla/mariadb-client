@@ -73,4 +73,5 @@ RUN apk add --no-cache --virtual .build-dependencies build-base wget libressl-de
     -DWITH_VALGRIND=OFF \
     -DWITH_ZLIB=system \
     -DSKIP_TESTS=ON \
-    -WITHOUT_SERVER=ON
+    -WITHOUT_SERVER=ON \
+ && make
