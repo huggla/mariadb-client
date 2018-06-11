@@ -2,7 +2,7 @@ FROM alpine:edge
 
 ENV MDB_VERSION="10.3.7"
 
-COPY ./pcre.cmake /tmp/pcre.cmake
+COPY ./cmake/pcre.cmake /tmp/pcre.cmake
 
 RUN apk add --no-cache --virtual .build-dependencies build-base wget libressl-dev zlib-dev mariadb-connector-c-dev bison cmake curl-dev libaio-dev libarchive-dev libevent-dev	libxml2-dev ncurses-dev pcre-dev readline-dev xz-dev linux-headers \
  && downloadDir="$(mktemp -d)" \
@@ -11,7 +11,7 @@ RUN apk add --no-cache --virtual .build-dependencies build-base wget libressl-de
  && mkdir "$buildDir/src"
  && tar xvfz "$downloadDir/mariadb.tar.gz" -C "$buildDir/src" --strip-components=1 \
  && rm -rf "$downloadDir" \
- && mv -f /cmake/pcre.cmake "$buildDir/src/cmake/pcre.cmake" \
+ && mv -f /tmp/pcre.cmake "$buildDir/src/cmake/pcre.cmake" \
  && cd "$buildDir/src" \
  && cmake .. \
     -DBUILD_CONFIG=mysql_release \
