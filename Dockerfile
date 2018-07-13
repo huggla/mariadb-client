@@ -17,5 +17,3 @@ RUN apk --no-cache --allow-untrusted add /mariadb-apks/mariadb-common.apk /maria
 FROM huggla/alpine
 
 COPY --from=stage2 /rootfs /
-
-ENV VAR_FINAL_COMMAND="/bin/sh"
