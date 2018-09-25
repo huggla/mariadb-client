@@ -1,19 +1,28 @@
-FROM huggla/mariadb as stage1
-FROM huggla/alpine as stage2
+FROM huggla/mariadb:10.3.9 as stage1
+FROM huggla/alpine-slim:20180921-edge as stage2
 
-USER root
+ARG APKS="mariadb-client libressl2.7-libssl"
 
 COPY --from=stage1 /mariadb-apks /mariadb-apks
 
-RUN apk --no-cache --allow-untrusted add /mariadb-apks/mariadb-common.apk /mariadb-apks/mariadb-client.apk \
- && apk --no-cache add libgcc xz-libs libaio pcre libstdc++ libressl2.7-libcrypto libressl2.7-libssl \
- && tar -cpf /installed_files.tar $(apk manifest mariadb-client mariadb-common libgcc xz-libs libaio pcre libstdc++ libressl2.7-libcrypto libressl2.7-libssl | awk -F "  " '{print $2;}') \
- && tar -xpf /installed_files.tar -C /rootfs/ \
+RUN echo /mariadb-apks >> /etc/apk/repositories \
+ && apk --no-cache --allow-untrusted add $APKS \
+ && apk --no-cache --quiet info > /apks.list \
+ && apk --no-cache --quiet manifest $(cat /apks.list) | awk -F "  " '{print $2;}' > /apks_files.list \
+ && tar -cvp -f /apks_files.tar -T /apks_files.list -C / \
+ && tar -xvp -f /apks_files.tar -C /rootfs/ \
  && mkdir -p /rootfs/usr/local/bin \
- && mv /rootfs/usr/bin/mysqld /rootfs/usr/local/bin/mysqld \
+ && rm -rf /mariadb-apks \
+ && cp -a /rootfs/usr/bin/mysql /rootfs/usr/local/bin/mysql \
  && cd /rootfs/usr/bin \
- && ln -s ../local/bin/mysqld mysqld
+ && ln -fs ../local/bin/mysql mysql
 
-FROM huggla/alpine
+FROM huggla/base:20180921-edge
 
 COPY --from=stage2 /rootfs /
+
+ENV VAR_LINUX_USER="mysql"
+
+USER starter
+
+ONBUILD USER root
