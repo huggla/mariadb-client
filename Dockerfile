@@ -3,7 +3,7 @@ FROM huggla/alpine-slim:20180921-edge as stage1
 
 ARG APKS="mariadb-client libressl2.7-libssl"
 
-COPY --from=stage1 /mariadb-apks /mariadb-apks
+COPY --from=stage2 /mariadb-apks /mariadb-apks
 
 RUN mkdir -p /rootfs/usr/local/bin \
  && echo /mariadb-apks >> /etc/apk/repositories \
