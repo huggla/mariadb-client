@@ -17,7 +17,7 @@ RUN mkdir -p /rootfs/usr/local/bin \
  && cd /rootfs/usr/bin \
  && ln -fs ../local/bin/mysql mysql
 
-FROM huggla/base:20180921-edge
+FROM huggla/base
 
 ENV VAR_LINUX_USER="mysql"
 
