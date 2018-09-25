@@ -1,5 +1,5 @@
 FROM huggla/mariadb:10.3.9 as stage2
-FROM huggla/alpine-slim:20180921-edge as stage1
+FROM huggla/alpine-slim as stage1
 
 ARG APKS="mariadb-client libressl2.7-libssl"
 
