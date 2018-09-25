@@ -5,13 +5,13 @@ ARG APKS="mariadb-client libressl2.7-libssl"
 
 COPY --from=stage1 /mariadb-apks /mariadb-apks
 
-RUN echo /mariadb-apks >> /etc/apk/repositories \
+RUN mkdir -p /rootfs/usr/local/bin \
+ && echo /mariadb-apks >> /etc/apk/repositories \
  && apk --no-cache --allow-untrusted add $APKS \
  && apk --no-cache --quiet info > /apks.list \
  && apk --no-cache --quiet manifest $(cat /apks.list) | awk -F "  " '{print $2;}' > /apks_files.list \
  && tar -cvp -f /apks_files.tar -T /apks_files.list -C / \
  && tar -xvp -f /apks_files.tar -C /rootfs/ \
- && mkdir -p /rootfs/usr/local/bin \
  && rm -rf /mariadb-apks \
  && cp -a /rootfs/usr/bin/mysql /rootfs/usr/local/bin/mysql \
  && cd /rootfs/usr/bin \
